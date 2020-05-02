@@ -15,4 +15,4 @@ password.send_keys(user_pwd);
 login_btn = driver.find_element(By.ID, "login-submit");
 login_btn.click();
 driver.get(url+"/dashboard/changeAccess");
-driver.get(url+"/settings/leaves");
+driver.get(url+"/settings/leaves")
