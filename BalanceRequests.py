@@ -15,7 +15,6 @@ url="https://automation.qa.darwinbox.io"
 #     r = requests.get(url,data=payload)
 #     # print(r.text)
 
-
 driver = webdriver.Chrome(ChromeDriverManager().install())   # installing a new web driver
 driver.get(url);
 user_login_id = "automation@yopmail.com"
