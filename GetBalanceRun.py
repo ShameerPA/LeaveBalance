@@ -1,6 +1,7 @@
 from openpyxl import load_workbook
 from datetime import datetime
 import GetBalance as Balance
+import CreateLeavePolicy
 ascii_uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 bal=Balance.GetBalance();
 try:
@@ -9,7 +10,8 @@ except FileNotFoundError:
     print("balance.xlsx is not found, please create it and fill with test data");
     exit();
 
-balance_sheet = wb['balance'];
+balance_sheet = wb['balance']
+leave_policy_sheet = wb['leave_policy']
 expected_result_column = ascii_uppercase[len(balance_sheet['1'])]; # expected_result header default to last place
 for i in ascii_uppercase:  # to find expected_result header location
     if(balance_sheet[i+'1'].value == "expected_result"):
@@ -83,13 +85,24 @@ for row_num in range(2,len(balance_sheet['A'])+1):  # To run the test for the ro
         workingdays = row[workingdays_index].value if row[workingdays_index].value is not None else "No";
     except:
         workingdays = "No";
-    result = bal.GetBalance(doj=doj, probation=probation, current_date=current_date, deactivated_on=deactivated_on, allotment=allotment, cycle=cycle, prorata=prorata, accrual=accrual, workingdays=workingdays);
-    balance_sheet[expected_result_column+str(row_num)].value = result;
+    expected_result = bal.GetBalance(doj=doj, probation=probation, current_date=current_date, deactivated_on=deactivated_on, allotment=allotment, cycle=cycle, prorata=prorata, accrual=accrual, workingdays=workingdays);
+    balance_sheet[expected_result_column+str(row_num)].value = expected_result;    # Adding Expected balance to the data sheet
     try:
         wb.save('balance.xlsx');
     except PermissionError:
         print("Please close the data excel if it is open ");
         wb.close();
         exit();
-    print(f"DOJ:{doj}, Probation:{probation}, current_date:{current_date}, deactivated_on:{deactivated_on}, allotment:{allotment}, cycle:{cycle}, Pro-Rata:{prorata}, Accrual:{accrual} ", f"Workingdays:{workingdays} " if workingdays != "No" else "", " ----> ",result);
+    print(f"DOJ:{doj}, Probation:{probation}, current_date:{current_date}, deactivated_on:{deactivated_on}, allotment:{allotment}, cycle:{cycle}, Pro-Rata:{prorata}, Accrual:{accrual} ", f"Workingdays:{workingdays} " if workingdays != "No" else "", " ----> ",expected_result);
     
+    ## Getting Actual Balance from the web ##
+    
+    # Create a leave policy
+    
+    # Create an employee
+    
+    # open his leave page
+    
+    # read the balance
+    
+    # Compare with  
