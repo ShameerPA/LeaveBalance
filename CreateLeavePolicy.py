@@ -28,9 +28,11 @@ class CreatePolicy():
     def change_access(self,driver):
         driver.get(self.url+'/dashboard/changeAccess')
 
-    def OpenChromeDriver():  # installing a new web driver
+    def OpenChromeDriver(self):  # installing a new web driver
         driver = webdriver.Chrome(ChromeDriverManager().install())   
         return driver
+
+
 
     def create(self,driver,leave_data):
         actions = ActionChains(driver)
