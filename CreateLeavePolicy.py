@@ -157,6 +157,8 @@ class CreatePolicy():
         save_button = driver.find_element_by_id('leave_policy_create_btn')
         actions.move_to_element(save_button).perform()
         save_button.click()
+        if __name__ != "__main__":
+            driver.get(url+"/settings/leaves/edit")
         return True
 
 if __name__ == "__main__":
