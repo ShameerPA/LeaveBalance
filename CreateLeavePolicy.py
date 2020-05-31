@@ -159,6 +159,7 @@ class CreatePolicy():
         save_button.click()
         if __name__ != "__main__":
             driver.get(url+"/settings/leaves/edit")
+            # added for testing
         return True
 
 if __name__ == "__main__":
