@@ -7,4 +7,3 @@ class CreateEmployee():
         self.data = data
     
     def Create():
-        
