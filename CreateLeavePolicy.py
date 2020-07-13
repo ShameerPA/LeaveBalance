@@ -9,6 +9,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from datetime import datetime
 from openpyxl import load_workbook
 import time
+import NetworkConnection
 
 import requests
 import time
@@ -28,11 +29,9 @@ class CreatePolicy():
     def change_access(self,driver):
         driver.get(self.url+'/dashboard/changeAccess')
 
-    def OpenChromeDriver(self):  # installing a new web driver
+    def OpenChromeDriver():  # installing a new web driver
         driver = webdriver.Chrome(ChromeDriverManager().install())   
         return driver
-
-
 
     def create(self,driver,leave_data):
         actions = ActionChains(driver)
@@ -134,23 +133,23 @@ class CreatePolicy():
                 driver.find_element_by_id('LeavePolicy_Accural_count_optional_holiday').click()
                 driver.find_element_by_id('LeavePolicy_Accural_count_absent').click()
         
-        if leave_data['carry_forward'].lower() != "" and leave_data['carry_forward'].lower() != "no":           #Carry forward
+        if str(leave_data['carry_forward']).lower() != "" and str(leave_data['carry_forward']).lower() != "no":           #Carry forward
             cfwd_dropdown = driver.find_element_by_xpath('//*[@id="leavePolicyAccordion"]/div[5]/div/div[1]/div/a')
             actions.move_to_element(cfwd_dropdown).perform()
             cfwd_dropdown.click()
             time.sleep(2)
             driver.find_element_by_xpath('/html/body/div[2]/div/section/div/div[4]/div[3]/div/div[5]/div/div[2]/div/div[1]/div/div[1]/div[1]/input').click()
             driver.implicitly_wait(10)
-            if leave_data['carry_forward'].lower() == "fixed" or leave_data['carry_forward'].lower() == 'percentage':
+            if str(leave_data['carry_forward']).lower() == "fixed" or str(leave_data['carry_forward']).lower() == 'percentage':
                 driver.find_element_by_xpath('/html/body/div[2]/div/section/div/div[4]/div[3]/div/div[5]/div/div[2]/div/div[1]/div/div[3]/div[2]/input').click()
                 driver.implicitly_wait(10)
                 cfwd = driver.find_element_by_xpath('/html/body/div[2]/div/section/div/div[4]/div[3]/div/div[5]/div/div[2]/div/div[2]/div/div[1]/select')
                 cfwd.send_keys(leave_data['carry_forward'][:4])
                 cfwd.send_keys(Keys.ENTER)
                 driver.find_element_by_id('LeavePolicy_UnusedCarryover_carry_forward_amount').send_keys(leave_data['carry_forward_amount'])
-                if leave_data['remaining_carryforward'].lower() == 'encash':
+                if str(leave_data['remaining_carryforward']).lower() == 'encash':
                     driver.find_element_by_xpath('/html/body/div[2]/div/section/div/div[4]/div[3]/div/div[5]/div/div[2]/div/div[2]/div/div[2]/div[2]/input').click()
-        if leave_data['carry_forward_lapse'].lower() != 'no' and leave_data['carry_forward_lapse'].lower() != '':       #Carry Forward Lapse
+        if str(leave_data['carry_forward_lapse']).lower() != 'no' and str(leave_data['carry_forward_lapse']).lower() != '' and str(leave_data['carry_forward_lapse']).lower() != 'none':       #Carry Forward Lapse
             driver.find_element_by_xpath('/html/body/div[2]/div/section/div/div[4]/div[3]/div/div[5]/div/div[2]/div/div[4]/div/div/div[1]/div/input').click()
             driver.implicitly_wait(10)
             driver.find_element_by_xpath('/html/body/div[2]/div/section/div/div[4]/div[3]/div/div[5]/div/div[2]/div/div[4]/div/div/div[2]/select').send_keys(leave_data['carry_forward_lapse'])
@@ -182,5 +181,6 @@ if __name__ == "__main__":
 
     for row_num in range(2,len(leave_policy_sheet['A'])+1):
         leave_data = {'group_company':leave_policy_sheet['A'+str(row_num)].value, 'leave_name':leave_policy_sheet['B'+str(row_num)].value, 'hourly':leave_policy_sheet['C'+str(row_num)].value, 'description':leave_policy_sheet['D'+str(row_num)].value, 'annual':leave_policy_sheet['E'+str(row_num)].value, 'cycle':leave_policy_sheet['F'+str(row_num)].value, 'multiple_allotment':leave_policy_sheet['G'+str(row_num)].value, 'prorata':leave_policy_sheet['H'+str(row_num)].value, 'accrual':leave_policy_sheet['I'+str(row_num)].value, 'workingdays':leave_policy_sheet['J'+str(row_num)].value,'carry_forward':leave_policy_sheet['K'+str(row_num)].value, 'carry_forward_amount':leave_policy_sheet['L'+str(row_num)].value,'remaining_carryforward':leave_policy_sheet['M'+str(row_num)].value,'carry_forward_lapse':leave_policy_sheet['N'+str(row_num)].value}
+        print(str(row_num) + ".  |",end="")
         print(leave_data)
         status = createObject.create(driver, leave_data)
