@@ -181,6 +181,6 @@ if __name__ == "__main__":
 
     for row_num in range(2,len(leave_policy_sheet['A'])+1):
         leave_data = {'group_company':leave_policy_sheet['A'+str(row_num)].value, 'leave_name':leave_policy_sheet['B'+str(row_num)].value, 'hourly':leave_policy_sheet['C'+str(row_num)].value, 'description':leave_policy_sheet['D'+str(row_num)].value, 'annual':leave_policy_sheet['E'+str(row_num)].value, 'cycle':leave_policy_sheet['F'+str(row_num)].value, 'multiple_allotment':leave_policy_sheet['G'+str(row_num)].value, 'prorata':leave_policy_sheet['H'+str(row_num)].value, 'accrual':leave_policy_sheet['I'+str(row_num)].value, 'workingdays':leave_policy_sheet['J'+str(row_num)].value,'carry_forward':leave_policy_sheet['K'+str(row_num)].value, 'carry_forward_amount':leave_policy_sheet['L'+str(row_num)].value,'remaining_carryforward':leave_policy_sheet['M'+str(row_num)].value,'carry_forward_lapse':leave_policy_sheet['N'+str(row_num)].value}
-        print(str(row_num) + ".  |",end="")
+        print(str(row_num-1) + ".  |",end="")
         print(leave_data)
         status = createObject.create(driver, leave_data)
