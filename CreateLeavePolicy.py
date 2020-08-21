@@ -28,7 +28,7 @@ class CreatePolicy():
     def change_access(self,driver):
         driver.get(self.url+'/dashboard/changeAccess')
 
-    def OpenChromeDriver(self):  # installing a new web driver
+    def OpenChromeDriver():  # installing a new web driver
         driver = webdriver.Chrome(ChromeDriverManager().install())   
         return driver
 
@@ -60,71 +60,109 @@ class CreatePolicy():
         else:
             driver.find_element(By.ID, "Leaves_p4_carry_over_time").send_keys("Cus")
             driver.find_element(By.ID, "Leaves_p4_custom_month").send_keys(leave_data['cycle'])
+
+        driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[1]/div/div[5]/div[13]/div/input').click()   #Push to Admin Always checked.
+
+                                #Retention_Of_TransferBalance
+        if leave_data['Retention_Of_TransferBalance'].lower() != '' and leave_data['Retention_Of_TransferBalance'].lower() != 'No':
+            driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[1]/div/div[5]/div[14]/div/input').click()
+        
+                            #Gender Applicability
+        Gender_Applicability = leave_data['Gender_Applicability'].lower()
+        if Gender_Applicability != 'no' and Gender_Applicability != '':
+            value = driver.find_element_by_xpath('/html/body/div[2]/div/section/div/div[1]/form/div/div[6]/div[6]/div/a/span').send_keys(leave_data['Gender_Applicability'])
+            value.click()
+
+                            #Leave Probation
+        Leave_Probation = str(leave_data['Leave_Probation']).lower()
+        if Leave_Probation != '' and Leave_Probation != '0' :
+            if Leave_Probation == 'employee':
+                driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[1]/div/div[6]/div[16]/div[2]/input').click()
+            else:
+                value = driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[1]/div/div[6]/div[17]/input')
+                value.clear()
+                value.send_keys(leave_data['Leave_Probation'])
+
+                                #Tenure
+        if leave_data['Tenure'].lower() != '' and leave_data['Tenure'].lower() != 'no':
+            value = driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[4]/div[3]/div/div[3]/div/div[1]/div/a')
+            actions.move_to_element(value).perform()
+            value.click()
+            time.sleep(1)
+            driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[4]/div[3]/div/div[3]/div/div[2]/div/div/div/div[1]/div[1]/input').click()
+            driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[4]/div[3]/div/div[3]/div/div[2]/div/div/div/div[3]/div[2]/div/table/tbody/tr[1]/td[2]/select').send_keys('2')
+            driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[4]/div[3]/div/div[3]/div/div[2]/div/div/div/div[3]/div[2]/div/table/tbody/tr[1]/td[3]/input').send_keys('24')
+            driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[4]/div[3]/div/div[3]/div/div[2]/div/div/div/div[3]/div[2]/div/div/a').click()
+            driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[4]/div[3]/div/div[3]/div/div[2]/div/div/div/div[3]/div[2]/div/table/tbody/tr[2]/td[1]/select').send_keys('2')
+            driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[4]/div[3]/div/div[3]/div/div[2]/div/div/div/div[3]/div[2]/div/table/tbody/tr[2]/td[2]/select').send_keys('3')
+            driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[4]/div[3]/div/div[3]/div/div[2]/div/div/div/div[3]/div[2]/div/table/tbody/tr[2]/td[3]/input').send_keys('36')
+            
         if leave_data['multiple_allotment'].lower() == 'yes':                   #Multiple Allotment
-            ma_checkbox = driver.find_element_by_xpath('/html/body/div[2]/div/section/div/div[1]/form/div/div[10]/div[1]/input')
+            ma_checkbox = driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[1]/div/div[10]/div[1]/input')
             actions.move_to_element(ma_checkbox).perform()
             ma_checkbox.click()
             driver.implicitly_wait(10)
-            driver.find_element_by_xpath('//*[@id="add_more_restriction_fields"]').click()
+            value = driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[1]/div/div[10]/div[2]/div/a')
+            value.click()
             driver.implicitly_wait(10)
-            driver.find_element_by_xpath('//*[@id="add_more_restriction_fields"]').click()
+            value.click()
             driver.implicitly_wait(10)
-            fulltime = driver.find_element_by_xpath('//*[@id="Leaves_multiple_allotment_restriction_0_restriction_chosen"]/ul/li/input')
+            fulltime = driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[1]/div/div[10]/div[2]/table/tbody/tr[1]/td[2]/div/ul/li/input')
             fulltime.click()
             fulltime.send_keys("Full Time")
             fulltime.send_keys(Keys.ENTER)
-            fulltime_val = driver.find_element_by_xpath('//*[@id="Leaves_multiple_allotment_restriction_0_maximumLeaves"]')
+            fulltime_val = driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[1]/div/div[10]/div[2]/table/tbody/tr[1]/td[3]/input')
             fulltime_val.send_keys("36")
-            parttime = driver.find_element_by_xpath('//*[@id="Leaves_multiple_allotment_restriction_1_restriction_chosen"]/ul/li/input')
+            parttime = driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[1]/div/div[10]/div[2]/table/tbody/tr[2]/td[2]/div/ul/li/input')
             parttime.click()
             driver.implicitly_wait(20)
             parttime.send_keys(" Part Time")
             parttime.send_keys(Keys.ENTER)
-            parttime_val = driver.find_element_by_xpath('//*[@id="Leaves_multiple_allotment_restriction_1_maximumLeaves"]')
+            parttime_val = driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[1]/div/div[10]/div[2]/table/tbody/tr[2]/td[3]/input')
             parttime_val.send_keys("24")
-            contract = driver.find_element_by_xpath('//*[@id="Leaves_multiple_allotment_restriction_2_restriction_chosen"]/ul/li/input')
+            contract = driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[1]/div/div[10]/div[2]/table/tbody/tr[3]/td[2]/div/ul/li/input')
             contract.click()
             driver.implicitly_wait(20)
             contract.send_keys(" Contract")
             contract.send_keys(Keys.ENTER)
-            contract_val = driver.find_element_by_xpath('//*[@id="Leaves_multiple_allotment_restriction_2_maximumLeaves"]')
+            contract_val = driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[1]/div/div[10]/div[2]/table/tbody/tr[3]/td[3]/input')
             contract_val.send_keys("12")
         if leave_data['prorata'].lower() != 'no' and leave_data['prorata'].lower() != "":           #Prorata
             prorata_dropdown = driver.find_element_by_xpath('//*[@id="leavePolicyAccordion"]/div/div[1]/div[1]/div/a')
             actions.move_to_element(prorata_dropdown).perform()
             prorata_dropdown.click()
             time.sleep(1)
-            driver.find_element_by_xpath('//*[@id="LeavePolicy_Prorated_status"]').click()
+            driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[4]/div[3]/div/div[1]/div/div[2]/div/div[1]/div/div[1]/div[1]/input').click()
             if leave_data['prorata'].lower() == 'joining_half':
-                driver.find_element_by_xpath('/html/body/div[2]/div/section/div/div[4]/div[3]/div/div[1]/div/div[2]/div/div[2]/div/div/div[2]/div[1]/input').click()
+                driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[4]/div[3]/div/div[1]/div/div[2]/div/div[2]/div/div/div[2]/div[1]/input').click()
             elif leave_data['prorata'].lower() == 'joining_full':
-                driver.find_element_by_xpath('/html/body/div[2]/div/section/div/div[4]/div[3]/div/div[1]/div/div[2]/div/div[2]/div/div/div[2]/div[2]/input').click()
+                driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[4]/div[3]/div/div[1]/div/div[2]/div/div[2]/div/div/div[2]/div[2]/input').click()
             elif leave_data['prorata'].lower() == 'probation_none':
-                driver.find_element_by_xpath('/html/body/div[2]/div/section/div/div[4]/div[3]/div/div[1]/div/div[2]/div/div[2]/div/div/div[1]/div[2]/input').click()
+                driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[4]/div[3]/div/div[1]/div/div[2]/div/div[2]/div/div/div[1]/div[2]/input').click()
             elif leave_data['prorata'].lower() == 'probation_half':
-                driver.find_element_by_xpath('/html/body/div[2]/div/section/div/div[4]/div[3]/div/div[1]/div/div[2]/div/div[2]/div/div/div[1]/div[2]/input').click()
-                driver.find_element_by_xpath('/html/body/div[2]/div/section/div/div[4]/div[3]/div/div[1]/div/div[2]/div/div[2]/div/div/div[2]/div[1]/input').click()
+                driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[4]/div[3]/div/div[1]/div/div[2]/div/div[2]/div/div/div[1]/div[2]/input').click()
+                driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[4]/div[3]/div/div[1]/div/div[2]/div/div[2]/div/div/div[2]/div[1]/input').click()
             elif leave_data['prorata'].lower() == 'probation_full':
                 driver.find_element_by_xpath('/html/body/div[2]/div/section/div/div[4]/div[3]/div/div[1]/div/div[2]/div/div[2]/div/div/div[1]/div[2]/input').click()
-                driver.find_element_by_xpath('/html/body/div[2]/div/section/div/div[4]/div[3]/div/div[1]/div/div[2]/div/div[2]/div/div/div[2]/div[2]/input').click()
+                driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[4]/div[3]/div/div[1]/div/div[2]/div/div[2]/div/div/div[2]/div[2]/input').click()
         
         if leave_data['accrual'].lower() != 'no' and leave_data['accrual'].lower() != '':           #accrual
             accrual_dropdown = driver.find_element_by_xpath('//*[@id="leavePolicyAccordion"]/div[2]/div/div[1]/div/a')
             actions.move_to_element(accrual_dropdown).perform()
             accrual_dropdown.click()
             time.sleep(1)
-            driver.find_element_by_xpath('/html/body/div[2]/div/section/div/div[4]/div[3]/div/div[2]/div/div[2]/div/div/div/div[1]/div[1]/input').click()
+            driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[4]/div[3]/div/div[2]/div/div[2]/div/div/div/div[1]/div[1]/input').click()
             if leave_data['accrual'].lower() == 'eom':
-                driver.find_element_by_xpath('/html/body/div[2]/div/section/div/div[4]/div[3]/div/div[2]/div/div[2]/div/div/div/div[5]/div[2]/input').click()
+                driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[4]/div[3]/div/div[2]/div/div[2]/div/div/div/div[5]/div[2]/input').click()
             elif leave_data['accrual'].lower() == 'boq':
-                driver.find_element_by_xpath('/html/body/div[2]/div/section/div/div[4]/div[3]/div/div[2]/div/div[2]/div/div/div/div[3]/div[2]/input').click()
+                driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[4]/div[3]/div/div[2]/div/div[2]/div/div/div/div[3]/div[2]/input').click()
             elif leave_data['accrual'].lower() == 'eoq':
-                driver.find_element_by_xpath('/html/body/div[2]/div/section/div/div[4]/div[3]/div/div[2]/div/div[2]/div/div/div/div[3]/div[2]/input').click()
-                driver.find_element_by_xpath('/html/body/div[2]/div/section/div/div[4]/div[3]/div/div[2]/div/div[2]/div/div/div/div[4]/div[2]/input').click()
+                driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[4]/div[3]/div/div[2]/div/div[2]/div/div/div/div[3]/div[2]/input').click()
+                driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[4]/div[3]/div/div[2]/div/div[2]/div/div/div/div[4]/div[2]/input').click()
             elif leave_data['accrual'].lower() == 'bia':
-                driver.find_element_by_xpath('/html/body/div[2]/div/section/div/div[4]/div[3]/div/div[2]/div/div[2]/div/div/div/div[3]/div[3]/input').click()
-            if leave_data['workingdays'].lower() == 'yes':
-                working = driver.find_element_by_xpath('/html/body/div[2]/div/section/div/div[4]/div[3]/div/div[2]/div/div[2]/div/div/div/div[3]/div[4]/div/input')
+                driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[4]/div[3]/div/div[2]/div/div[2]/div/div/div/div[3]/div[3]/input').click()
+            if leave_data['workingdays'].lower() != '' and leave_data['workingdays'].lower() != 'no' :
+                working = driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[4]/div[3]/div/div[2]/div/div[2]/div/div/div/div[3]/div[4]/div/input')
                 actions.move_to_element(working).perform()
                 working.click()
                 driver.find_element_by_id('LeavePolicy_Accural_count_presents').click()
@@ -133,27 +171,29 @@ class CreatePolicy():
                 driver.find_element_by_id('LeavePolicy_Accural_count_weeklyoff').click()
                 driver.find_element_by_id('LeavePolicy_Accural_count_optional_holiday').click()
                 driver.find_element_by_id('LeavePolicy_Accural_count_absent').click()
+            if leave_data['workingdays'].lower() == 'eoy':
+                driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[4]/div[3]/div/div[2]/div/div[2]/div/div/div/div[6]/div[2]/div/div/div/input').click()
         
         if leave_data['carry_forward'].lower() != "" and leave_data['carry_forward'].lower() != "no":           #Carry forward
             cfwd_dropdown = driver.find_element_by_xpath('//*[@id="leavePolicyAccordion"]/div[5]/div/div[1]/div/a')
             actions.move_to_element(cfwd_dropdown).perform()
             cfwd_dropdown.click()
             time.sleep(2)
-            driver.find_element_by_xpath('/html/body/div[2]/div/section/div/div[4]/div[3]/div/div[5]/div/div[2]/div/div[1]/div/div[1]/div[1]/input').click()
+            driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[4]/div[3]/div/div[5]/div/div[2]/div/div[1]/div/div[1]/div[1]/input').click()
             driver.implicitly_wait(10)
             if leave_data['carry_forward'].lower() == "fixed" or leave_data['carry_forward'].lower() == 'percentage':
-                driver.find_element_by_xpath('/html/body/div[2]/div/section/div/div[4]/div[3]/div/div[5]/div/div[2]/div/div[1]/div/div[3]/div[2]/input').click()
+                driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[4]/div[3]/div/div[5]/div/div[2]/div/div[1]/div/div[3]/div[2]/input').click()
                 driver.implicitly_wait(10)
-                cfwd = driver.find_element_by_xpath('/html/body/div[2]/div/section/div/div[4]/div[3]/div/div[5]/div/div[2]/div/div[2]/div/div[1]/select')
+                cfwd = driver.find_element_by_id('/html/body/div[2]/div/section/form/div/div[4]/div[3]/div/div[5]/div/div[2]/div/div[2]/div/div[1]/select')
                 cfwd.send_keys(leave_data['carry_forward'][:4])
                 cfwd.send_keys(Keys.ENTER)
                 driver.find_element_by_id('LeavePolicy_UnusedCarryover_carry_forward_amount').send_keys(leave_data['carry_forward_amount'])
                 if leave_data['remaining_carryforward'].lower() == 'encash':
-                    driver.find_element_by_xpath('/html/body/div[2]/div/section/div/div[4]/div[3]/div/div[5]/div/div[2]/div/div[2]/div/div[2]/div[2]/input').click()
-        if leave_data['carry_forward_lapse'].lower() != 'no' and leave_data['carry_forward_lapse'].lower() != '':       #Carry Forward Lapse
-            driver.find_element_by_xpath('/html/body/div[2]/div/section/div/div[4]/div[3]/div/div[5]/div/div[2]/div/div[4]/div/div/div[1]/div/input').click()
-            driver.implicitly_wait(10)
-            driver.find_element_by_xpath('/html/body/div[2]/div/section/div/div[4]/div[3]/div/div[5]/div/div[2]/div/div[4]/div/div/div[2]/select').send_keys(leave_data['carry_forward_lapse'])
+                    driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[4]/div[3]/div/div[5]/div/div[2]/div/div[2]/div/div[2]/div[2]/input').click()
+                if leave_data['carry_forward_lapse'].lower() != 'no' and leave_data['carry_forward_lapse'].lower() != '':       #Carry Forward Lapse
+                    driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[4]/div[3]/div/div[5]/div/div[2]/div/div[4]/div/div/div[1]/div/input').click()
+                    driver.implicitly_wait(10)
+                    driver.find_element_by_id('LeavePolicy_UnusedCarryover_validaty_month').send_keys(leave_data['carry_forward_lapse'])
         save_button = driver.find_element_by_id('leave_policy_create_btn')
         actions.move_to_element(save_button).perform()
         save_button.click()
@@ -177,9 +217,9 @@ if __name__ == "__main__":
     createObject.change_access(driver)
     driver.get(createObject.url+'/settings/leaves/create')
     print(url)
-    leave_data = {'group_company':'', 'leave_name':'', 'hourly':'', 'description':'', 'annual':'', 'cycle':'', 'multiple_allotment':'', 'prorata':'no', 'accrual':'no', 'carry_forward':'no', 'carry_forward_lapse':'no'}
+    leave_data = {'group_company':'', 'leave_name':'', 'hourly':'', 'description':'', 'annual':'', 'cycle':'', 'multiple_allotment':'', 'prorata':'no', 'accrual':'no', 'carry_forward':'no', 'carry_forward_lapse':'no', 'Retention_Of_TransferBalance':'No','Tenure':'No', 'Gender_Applicability':'For All', 'Leave_Probation':'0', 'Halfday_Leave':'No', 'Count_Intervening':'No', 'Allow_Past':'No'}
 
     for row_num in range(2,len(leave_policy_sheet['A'])+1):
-        leave_data = {'group_company':leave_policy_sheet['A'+str(row_num)].value, 'leave_name':leave_policy_sheet['B'+str(row_num)].value, 'hourly':leave_policy_sheet['C'+str(row_num)].value, 'description':leave_policy_sheet['D'+str(row_num)].value, 'annual':leave_policy_sheet['E'+str(row_num)].value, 'cycle':leave_policy_sheet['F'+str(row_num)].value, 'multiple_allotment':leave_policy_sheet['G'+str(row_num)].value, 'prorata':leave_policy_sheet['H'+str(row_num)].value, 'accrual':leave_policy_sheet['I'+str(row_num)].value, 'workingdays':leave_policy_sheet['J'+str(row_num)].value,'carry_forward':leave_policy_sheet['K'+str(row_num)].value, 'carry_forward_amount':leave_policy_sheet['L'+str(row_num)].value,'remaining_carryforward':leave_policy_sheet['M'+str(row_num)].value,'carry_forward_lapse':leave_policy_sheet['N'+str(row_num)].value}
+        leave_data = {'group_company':leave_policy_sheet['A'+str(row_num)].value, 'leave_name':leave_policy_sheet['B'+str(row_num)].value, 'hourly':leave_policy_sheet['C'+str(row_num)].value, 'description':leave_policy_sheet['D'+str(row_num)].value, 'annual':leave_policy_sheet['E'+str(row_num)].value, 'cycle':leave_policy_sheet['F'+str(row_num)].value, 'multiple_allotment':leave_policy_sheet['G'+str(row_num)].value, 'prorata':leave_policy_sheet['H'+str(row_num)].value, 'accrual':leave_policy_sheet['I'+str(row_num)].value, 'workingdays':leave_policy_sheet['J'+str(row_num)].value,'carry_forward':leave_policy_sheet['K'+str(row_num)].value, 'carry_forward_amount':leave_policy_sheet['L'+str(row_num)].value,'remaining_carryforward':leave_policy_sheet['M'+str(row_num)].value,'carry_forward_lapse':leave_policy_sheet['N'+str(row_num)].value, 'Retention_Of_TransferBalance':leave_policy_sheet['O'+str(row_num)].value,'Tenure':leave_policy_sheet['P'+str(row_num)].value, 'Gender_Applicability':leave_policy_sheet['Q'+str(row_num)].value, 'Leave_Probation':leave_policy_sheet['R'+str(row_num)].value, 'Halfday_Leave':leave_policy_sheet['S'+str(row_num)].value, 'Count_Intervening':leave_policy_sheet['T'+str(row_num)].value, 'Allow_Past':leave_policy_sheet['U'+str(row_num)].value}
         print(leave_data)
         status = createObject.create(driver, leave_data)
