@@ -61,8 +61,16 @@ class CreatePolicy():
             driver.find_element(By.ID, "Leaves_p4_carry_over_time").send_keys("Cus")
             driver.find_element(By.ID, "Leaves_p4_custom_month").send_keys(leave_data['cycle'])
 
-        driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[1]/div/div[5]/div[13]/div/input').click()   #Push to Admin Always checked.
-
+#        if(leave_data['restriction'].lower()!="no" or leave_data['restriction'].lower()==""):   #Restriction
+#            restriction = driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[1]/div/div[5]/div[8]/div[2]/div/ul')
+#            restriction.send_keys(leave_data['restriction'])
+#            restriction.send_keys(Keys.ENTER)
+#            time.sleep(1)
+#            time.sleep(100)
+        time.sleep(1)
+        pushadmin = driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[1]/div/div[5]/div[13]/div/input')   #Push to Admin Always checked.
+        actions.move_to_element(pushadmin).perform()
+        pushadmin.click()
                                 #Retention_Of_TransferBalance
         if leave_data['Retention_Of_TransferBalance'].lower() != '' and leave_data['Retention_Of_TransferBalance'].lower() != 'No':
             driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[1]/div/div[5]/div[14]/div/input').click()
@@ -217,9 +225,10 @@ if __name__ == "__main__":
     createObject.change_access(driver)
     driver.get(createObject.url+'/settings/leaves/create')
     print(url)
-    leave_data = {'group_company':'', 'leave_name':'', 'hourly':'', 'description':'', 'annual':'', 'cycle':'', 'multiple_allotment':'', 'prorata':'no', 'accrual':'no', 'carry_forward':'no', 'carry_forward_lapse':'no', 'Retention_Of_TransferBalance':'No','Tenure':'No', 'Gender_Applicability':'For All', 'Leave_Probation':'0', 'Halfday_Leave':'No', 'Count_Intervening':'No', 'Allow_Past':'No'}
+    leave_data = {'group_company':'', 'leave_name':'', 'hourly':'', 'description':'', 'annual':'','restriction':'no', 'cycle':'', 'multiple_allotment':'', 'prorata':'no', 'accrual':'no', 'carry_forward':'no', 'carry_forward_lapse':'no', 'Retention_Of_TransferBalance':'No','Tenure':'No', 'Gender_Applicability':'For All', 'Leave_Probation':'0', 'Halfday_Leave':'No', 'Count_Intervening':'No', 'Allow_Past':'No'}
 
     for row_num in range(2,len(leave_policy_sheet['A'])+1):
-        leave_data = {'group_company':leave_policy_sheet['A'+str(row_num)].value, 'leave_name':leave_policy_sheet['B'+str(row_num)].value, 'hourly':leave_policy_sheet['C'+str(row_num)].value, 'description':leave_policy_sheet['D'+str(row_num)].value, 'annual':leave_policy_sheet['E'+str(row_num)].value, 'cycle':leave_policy_sheet['F'+str(row_num)].value, 'multiple_allotment':leave_policy_sheet['G'+str(row_num)].value, 'prorata':leave_policy_sheet['H'+str(row_num)].value, 'accrual':leave_policy_sheet['I'+str(row_num)].value, 'workingdays':leave_policy_sheet['J'+str(row_num)].value,'carry_forward':leave_policy_sheet['K'+str(row_num)].value, 'carry_forward_amount':leave_policy_sheet['L'+str(row_num)].value,'remaining_carryforward':leave_policy_sheet['M'+str(row_num)].value,'carry_forward_lapse':leave_policy_sheet['N'+str(row_num)].value, 'Retention_Of_TransferBalance':leave_policy_sheet['O'+str(row_num)].value,'Tenure':leave_policy_sheet['P'+str(row_num)].value, 'Gender_Applicability':leave_policy_sheet['Q'+str(row_num)].value, 'Leave_Probation':leave_policy_sheet['R'+str(row_num)].value, 'Halfday_Leave':leave_policy_sheet['S'+str(row_num)].value, 'Count_Intervening':leave_policy_sheet['T'+str(row_num)].value, 'Allow_Past':leave_policy_sheet['U'+str(row_num)].value}
+        leave_data = {'group_company':leave_policy_sheet['A'+str(row_num)].value, 'leave_name':leave_policy_sheet['B'+str(row_num)].value, 'hourly':leave_policy_sheet['C'+str(row_num)].value, 'description':leave_policy_sheet['D'+str(row_num)].value, 'annual':leave_policy_sheet['E'+str(row_num)].value,'restriction':leave_policy_sheet['F'+str(row_num)].value, 'cycle':leave_policy_sheet['G'+str(row_num)].value, 'multiple_allotment':leave_policy_sheet['H'+str(row_num)].value, 'prorata':leave_policy_sheet['I'+str(row_num)].value, 'accrual':leave_policy_sheet['J'+str(row_num)].value, 'workingdays':leave_policy_sheet['K'+str(row_num)].value,'carry_forward':leave_policy_sheet['L'+str(row_num)].value, 'carry_forward_amount':leave_policy_sheet['M'+str(row_num)].value,'remaining_carryforward':leave_policy_sheet['N'+str(row_num)].value,'carry_forward_lapse':leave_policy_sheet['O'+str(row_num)].value, 'Retention_Of_TransferBalance':leave_policy_sheet['P'+str(row_num)].value,'Tenure':leave_policy_sheet['Q'+str(row_num)].value, 'Gender_Applicability':leave_policy_sheet['R'+str(row_num)].value, 'Leave_Probation':leave_policy_sheet['S'+str(row_num)].value, 'Halfday_Leave':leave_policy_sheet['T'+str(row_num)].value, 'Count_Intervening':leave_policy_sheet['U'+str(row_num)].value, 'Allow_Past':leave_policy_sheet['V'+str(row_num)].value}
+        print(row_num-1,end="")
         print(leave_data)
         status = createObject.create(driver, leave_data)
