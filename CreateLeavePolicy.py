@@ -24,12 +24,12 @@ class CreatePolicy():
         driver.find_element(By.ID, "UserLogin_password").send_keys(self.password)
         driver.find_element(By.ID, "login-submit").click()
         return True
-    
+
     def change_access(self,driver):
         driver.get(self.url+'/dashboard/changeAccess')
 
     def OpenChromeDriver():  # installing a new web driver
-        driver = webdriver.Chrome(ChromeDriverManager().install())   
+        driver = webdriver.Chrome(ChromeDriverManager().install())
         return driver
 
 
@@ -74,7 +74,7 @@ class CreatePolicy():
                                 #Retention_Of_TransferBalance
         if leave_data['Retention_Of_TransferBalance'].lower() != '' and leave_data['Retention_Of_TransferBalance'].lower() != 'No':
             driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[1]/div/div[5]/div[14]/div/input').click()
-        
+
                             #Gender Applicability
         Gender_Applicability = leave_data['Gender_Applicability'].lower()
         if Gender_Applicability != 'no' and Gender_Applicability != '':
@@ -104,7 +104,7 @@ class CreatePolicy():
             driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[4]/div[3]/div/div[3]/div/div[2]/div/div/div/div[3]/div[2]/div/table/tbody/tr[2]/td[1]/select').send_keys('2')
             driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[4]/div[3]/div/div[3]/div/div[2]/div/div/div/div[3]/div[2]/div/table/tbody/tr[2]/td[2]/select').send_keys('3')
             driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[4]/div[3]/div/div[3]/div/div[2]/div/div/div/div[3]/div[2]/div/table/tbody/tr[2]/td[3]/input').send_keys('36')
-            
+
         if leave_data['multiple_allotment'].lower() == 'yes':                   #Multiple Allotment
             ma_checkbox = driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[1]/div/div[10]/div[1]/input')
             actions.move_to_element(ma_checkbox).perform()
@@ -153,7 +153,7 @@ class CreatePolicy():
             elif leave_data['prorata'].lower() == 'probation_full':
                 driver.find_element_by_xpath('/html/body/div[2]/div/section/div/div[4]/div[3]/div/div[1]/div/div[2]/div/div[2]/div/div/div[1]/div[2]/input').click()
                 driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[4]/div[3]/div/div[1]/div/div[2]/div/div[2]/div/div/div[2]/div[2]/input').click()
-        
+
         if leave_data['accrual'].lower() != 'no' and leave_data['accrual'].lower() != '':           #accrual
             accrual_dropdown = driver.find_element_by_xpath('//*[@id="leavePolicyAccordion"]/div[2]/div/div[1]/div/a')
             actions.move_to_element(accrual_dropdown).perform()
@@ -181,7 +181,7 @@ class CreatePolicy():
                 driver.find_element_by_id('LeavePolicy_Accural_count_absent').click()
             if leave_data['workingdays'].lower() == 'eoy':
                 driver.find_element_by_xpath('/html/body/div[2]/div/section/form/div/div[4]/div[3]/div/div[2]/div/div[2]/div/div/div/div[6]/div[2]/div/div/div/input').click()
-        
+
         if leave_data['carry_forward'].lower() != "" and leave_data['carry_forward'].lower() != "no":           #Carry forward
             cfwd_dropdown = driver.find_element_by_xpath('//*[@id="leavePolicyAccordion"]/div[5]/div/div[1]/div/a')
             actions.move_to_element(cfwd_dropdown).perform()
